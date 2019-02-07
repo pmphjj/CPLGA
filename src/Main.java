@@ -25,7 +25,7 @@ public class Main extends GeneticAlgorithm{
 
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
-		String address = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\GACP\\";
+		String address = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\CPLGA\\";
 		/*
 		 * 脑出血, 	脑出血临床路径.json
 		 * ('O80.901', 52456)
@@ -69,8 +69,8 @@ public class Main extends GeneticAlgorithm{
 		 * K25.902:胃溃疡
 		 *
 		*/
-		String infileName = "脑出血";
-		String inJsonName = "脑出血临床路径";
+		String infileName = "";
+		String inJsonName = "";
 		ArrayList<String> infilelist = new ArrayList<String>();
 		ArrayList<String> inJsonlist = new ArrayList<String>();
 		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(new File(address+"通用性实验疾病名称表.txt"))));
@@ -127,7 +127,7 @@ public class Main extends GeneticAlgorithm{
 		for (int i = 0; i < bestChro.gene.length; i++) {
 			actList[bestChro.gene[i]].add(i);
 		}
-		String outputAddress = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\GACP\\新res\\本地化临床路径\\";
+		String outputAddress = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\CPLGA\\新res\\本地化临床路径\\";
 		BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputAddress+cpName+".txt"))));
 		for (int i = 0; i < deleteDetail.size(); i++) {
 			wr.write(deleteDetail.get(i));

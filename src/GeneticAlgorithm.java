@@ -29,9 +29,13 @@ public abstract class GeneticAlgorithm {
     /**基因颜色数量*/
     private int colorSize;
     /**最大迭代次数*/
-    private int maxIterNum = 3000;
+    private int maxIterNum = 300;
+    /**最大纪元次数*/
+    private int maxEpochIterNum = 10;
     /**基因变异的概率*/
     private double mutationRate = 0.1;
+    /**基因交叉的概率*/
+    private double crossRate = 0.8;
     /**最大变异步长*/
     private int maxMutationNum = 10;
     /**当前遗传到第几代*/
@@ -69,34 +73,38 @@ public abstract class GeneticAlgorithm {
      * @Description: 启动遗传算法
      */
     public void caculte() throws IOException {
-
-        //1.初始化种群
-        init();
-        x = population.get(0);
-        for(generation = 1; generation < maxIterNum; generation++) {
-        	//2.计算种群适应度
-        	long millis=System.currentTimeMillis();
-        	caculteScore();
-        	System.out.println("3>验证阈值...");
-            //4.种群遗传
-        	long millis1=System.currentTimeMillis();
-            evolve();
-          //5.基因突变
-            long millis2=System.currentTimeMillis();
-            mutation();
-            long millis3=System.currentTimeMillis();
-            print();
-            long millis4=System.currentTimeMillis();
-            System.out.println((double)(millis1-millis)/1000+","+(double)(millis2-millis1)/1000+","+(double)(millis3-millis2)/1000+","+(double)(millis4-millis3)/1000);
+		//1.初始化种群
+		init();
+    	for(int epoch = 0; epoch < maxEpochIterNum; epoch++) {
+    		System.out.println("Epoch:"+epoch);
+            x = population.get(0);
+            for(generation = 1; generation < maxIterNum; generation++) {
+            	//2.计算种群适应度
+            	long millis=System.currentTimeMillis();
+            	caculteScore();
+            	System.out.println("3>验证阈值...");
+                //4.种群遗传
+            	long millis1=System.currentTimeMillis();
+                evolve();
+                //5.基因突变
+                long millis2=System.currentTimeMillis();
+                mutation();
+                long millis3=System.currentTimeMillis();
+                print();
+                long millis4=System.currentTimeMillis();
+                System.out.println((double)(millis1-millis)/1000+","+(double)(millis2-millis1)/1000+","+(double)(millis3-millis2)/1000+","+(double)(millis4-millis3)/1000);
+                if(bestScore == SCOREMAX) break;
+            }
             if(bestScore == SCOREMAX) break;
-        }
+            disaster();
+    	}
         showStatistics();
 
     }
 
     private void showStatistics() throws IOException {
 		// TODO Auto-generated method stub
-		String address = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\GACP\\新res\\迭代结果统计\\";
+		String address = "D:\\hjj\\清华\\实验室工作\\临床诊疗过程符合性判定\\CPLGA\\新res\\迭代结果统计\\";
 		BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(address+"统计.csv"),true)));
 
 		long millis=System.currentTimeMillis();
@@ -275,6 +283,18 @@ public abstract class GeneticAlgorithm {
     }
 
     /**
+     * @Description:种群灾变
+     */
+    private void disaster() {
+    	population = new ArrayList<Chromosome>();
+    	population.add(x);
+        for (int i = 1; i < popSize; i++) {
+            Chromosome chro = new Chromosome(geneSize,colorSize);
+            population.add(chro);
+        }
+    }
+
+    /**
      * @Description:种群进行遗传
      */
     private void evolve() {
@@ -283,10 +303,12 @@ public abstract class GeneticAlgorithm {
         while (childPopulation.size() < popSize) {
             Chromosome parent1 = getParentChromosome();
             Chromosome parent2 = getParentChromosome();
-            List<Chromosome> children = Chromosome.genetic(parent1, parent2);
-            if (children != null) {
-                for (Chromosome chro : children) {
-                    childPopulation.add(chro);
+            if (Math.random() <= crossRate) {
+            	List<Chromosome> children = Chromosome.genetic(parent1, parent2);
+                if (children != null) {
+                    for (Chromosome chro : children) {
+                        childPopulation.add(chro);
+                    }
                 }
             }
         }
