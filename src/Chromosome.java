@@ -33,6 +33,7 @@ public class Chromosome {
      */
     public int getScore() {
         return score;
+//    	return wScore;
     }
 
 

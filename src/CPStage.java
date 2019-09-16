@@ -2,8 +2,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class CPStage {
-	HashSet<Integer> activityIDSet;
-	HashSet<String> activityNameSet;
+	public HashSet<Integer> activityIDSet;
+	public HashSet<String> activityNameSet;
 
 
 	public CPStage() {
